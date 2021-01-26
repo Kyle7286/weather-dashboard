@@ -10,10 +10,13 @@ var searchBox = $("#search-value");
 // On Search Click...
 $("#search-button").click(function (e) {
     e.preventDefault();
-    // Clear contents of searchbox
+
+    // Call the current weather function to call the API and build the HTML
     getCurrentWeather(searchBox.val());
+    
+    // Clear contents of searchbox
     searchBox.val("");
-  
+
 });
 
 function getCurrentWeather(city) {
@@ -27,6 +30,16 @@ function getCurrentWeather(city) {
         method: "GET"
     }).then(function (response) {
         console.log(response);
+        var date = "?" // Need luxon
+        var name = response.main.name;
+        var currentTemp = response.main.temp;
+        var currentHumidity = response.main.humidity;
+        var currentWindSpeed = response.wind.speed;
+        var currentUVIndex = "?";
+        var currentIcon = response.weather[0].icon;
+        
+        
+        console.log(currentIcon);
 
     });
 
