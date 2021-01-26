@@ -29,8 +29,12 @@ function getCurrentWeather(city) {
         // Log the object for navigating
         console.log(response);
 
+        // Get date value from openweather, convert to JS date format
+        var currentDate = (response.dt * 1000);
+        var d = new Date(currentDate)
+        var dateString = (d.getMonth() + 1) + "/" + d.getDate() + "/" + d.getFullYear();
+
         // Grab the data we need to display
-        var currentDate = response.dt; // Need luxon
         var name = response.name;
         var currentTemp = response.main.temp;
         var currentHumidity = response.main.humidity;
@@ -44,22 +48,13 @@ function getCurrentWeather(city) {
         console.log(iconURL);
 
         // Create card elements
-        $("<h3>").text(name + " " + currentDate).appendTo(divCardBody).append($("<img>").attr({ id: "wicon", alt: "Weather Icon" }).attr("src", iconURL));
+        $("<h3>").text(name + " (" + dateString + ")").appendTo(divCardBody).append($("<img>").attr({ id: "wicon", alt: "Weather Icon" }).attr("src", iconURL));
         $("<p>").text("Temperature: " + currentTemp + " °F").appendTo(divCardBody);
         $("<p>").text("Humidity: " + currentHumidity + "%").appendTo(divCardBody);
         $("<p>").text("Wind Speed: " + currentWindSpeed + "MPH").appendTo(divCardBody);
 
-
-
-
         // Append final card to page
         $("#today").append(divCard);
-
-
-
-
-
-
 
         // Grab Lon & lat values for index call
         var lon = response.coord.lon;
@@ -69,8 +64,6 @@ function getCurrentWeather(city) {
         getUVIndex(lon, lat);
 
         // Get 5-day Forecast Function
-
-
     });
 
 
