@@ -4,19 +4,39 @@
 
 // Global Declarations
 var apiKey = "&appid=653447e5538dcc45b8534eb1e5c601c3";
+var aHistory = [];
 
 // On Search Click...
 $("#search-button").click(function (e) {
     e.preventDefault();
+    var city = $("#search-value").val();
 
     // Call the current weather function to call the API and build the HTML
-    getCurrentWeather($("#search-value").val());
+    getCurrentWeather(city);
+    writeHistory(aHistory, city);
 
     // Clear contents of searchbox
-    $("#search-value").val("");
+    $("#search-value").val();
+
+    // Clear contents of today div
+    $("#today").empty();
 
 });
 
+
+function getHistory() {
+    // read local storage array
+}
+
+function writeHistory(array, city) {
+    var pCity = city.charAt(0).toUpperCase() + city.slice(1).toLowerCase();
+    if (array.indexOf(pCity) === -1) {
+        array.push(pCity);
+    }
+    console.log(array);
+}
+
+// Create the Current Weather elements
 function getCurrentWeather(city) {
     var cityName = city
     var units = "&units=imperial"
@@ -27,7 +47,7 @@ function getCurrentWeather(city) {
         method: "GET"
     }).then(function (response) {
         // Log the object for navigating
-        console.log(response);
+        // console.log(response);
 
         // Get date value from openweather, convert to JS date format
         var currentDate = (response.dt * 1000);
@@ -45,7 +65,6 @@ function getCurrentWeather(city) {
         var divCard = $("<div>").attr({ class: "card", id: "today-card" });
         var divCardBody = $("<div>").attr({ class: "card-body", id: "today-card-body" }).appendTo(divCard);
         var iconURL = "http://openweathermap.org/img/w/" + currentIcon + ".png"
-        console.log(iconURL);
 
         // Create card elements
         $("<h3>").text(name + " (" + dateString + ")").appendTo(divCardBody).append($("<img>").attr({ id: "wicon", alt: "Weather Icon" }).attr("src", iconURL));
@@ -69,10 +88,11 @@ function getCurrentWeather(city) {
 
 }
 
+// Create the UV Index Element
 function getUVIndex(lon, lat) {
     // Example URL: http://api.openweathermap.org/data/2.5/uvi?lat={lat}&lon={lon}&appid={API key}
     var queryURL = "https://api.openweathermap.org/data/2.5/uvi?lat=" + lat + "&lon=" + lon + apiKey;
-    var index = "";
+
     $.ajax({
         url: queryURL,
         method: "GET"
@@ -81,7 +101,21 @@ function getUVIndex(lon, lat) {
         console.log(response);
 
         // Grab the data we need to display
-        index = response.value;
+        var index = response.value;
+
+        // 
+        $("<p>").text("UV: ").attr("class", "d-inline").appendTo($("#today-card-body"));
+        var uvBtn = $("<button>").text(index).attr("class", "btn-sm").attr("disabled", "").css("color", "white").appendTo($("#today-card-body"))
+        if (index <= 2) { uvBtn.addClass("btn-success"); }
+        else if (index <= 5 && index >= 3) { uvBtn.css({ "background-color": "yellow", "color": "black" }); }
+        else if (index <= 7 && index >= 6) { uvBtn.addClass("btn-warning"); }
+        else if (index <= 10 && index >= 8) { uvBtn.addClass("btn-danger"); }
+        else if (index >= 11) { uvBtn.css("background-color", "purple"); }
+
+
+
+
+
         console.log(index);
     });
 }
