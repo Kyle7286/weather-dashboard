@@ -2,16 +2,15 @@
 
 ## General 📖
 ---
-- Date:           
+- Date:           01/28/2021     
 - Refactored by:  Brandon Haley
 - Email:          Kyle7286@gmail.com
-- Github:         
-- Website:        
+- Github:         https://github.com/Kyle7286/weather-dashboard
+- Website:        https://kyle7286.github.io/weather-dashboard/
 
 ## About/Purpose ❔
 ---
 
-Template
 
 
 ## Takeaways 🥡
