@@ -13,7 +13,6 @@ $("#search-button").click(function (e) {
 
     // Call the current weather function to call the API and build the HTML
     getCurrentWeather(city);
-    writeHistory(aHistory, city);
 
     // Clear contents of searchbox
     $("#search-value").val();
@@ -49,6 +48,9 @@ function getCurrentWeather(city) {
         // Log the object for navigating
         // console.log(response);
 
+        // Save the city to local storage
+        writeHistory(aHistory, city);
+
         // Get date value from openweather, convert to JS date format
         var currentDate = (response.dt * 1000);
         var d = new Date(currentDate)
@@ -79,7 +81,7 @@ function getCurrentWeather(city) {
         var lon = response.coord.lon;
         var lat = response.coord.lat;
 
-        // Get UvIndex function
+        // Get UvIndex
         getUVIndex(lon, lat);
 
         // Get 5-day Forecast Function
@@ -88,7 +90,7 @@ function getCurrentWeather(city) {
 
 }
 
-// Create the UV Index Element
+// Create the UV Index Element and append to today card
 function getUVIndex(lon, lat) {
     // Example URL: http://api.openweathermap.org/data/2.5/uvi?lat={lat}&lon={lon}&appid={API key}
     var queryURL = "https://api.openweathermap.org/data/2.5/uvi?lat=" + lat + "&lon=" + lon + apiKey;
@@ -97,13 +99,10 @@ function getUVIndex(lon, lat) {
         url: queryURL,
         method: "GET"
     }).then(function (response) {
-        // Log the object for navigating
-        console.log(response);
-
         // Grab the data we need to display
-        var index = response.value;
+        var index = Math.round(response.value);
 
-        // 
+        // Create UV Text and button (color coded) based on lvl of index
         $("<p>").text("UV: ").attr("class", "d-inline").appendTo($("#today-card-body"));
         var uvBtn = $("<button>").text(index).attr("class", "btn-sm").attr("disabled", "").css("color", "white").appendTo($("#today-card-body"))
         if (index <= 2) { uvBtn.addClass("btn-success"); }
@@ -111,11 +110,5 @@ function getUVIndex(lon, lat) {
         else if (index <= 7 && index >= 6) { uvBtn.addClass("btn-warning"); }
         else if (index <= 10 && index >= 8) { uvBtn.addClass("btn-danger"); }
         else if (index >= 11) { uvBtn.css("background-color", "purple"); }
-
-
-
-
-
-        console.log(index);
     });
 }
