@@ -5,11 +5,8 @@
 // Global Declarations
 var apiKey = "&appid=653447e5538dcc45b8534eb1e5c601c3";
 
-// Grab the history on page load
-var aHistory = getHistory();
-
 // Display the history on page load
-displayHistory(aHistory);
+var aHistory = displayHistory();
 
 
 // On Search Click...
@@ -29,26 +26,25 @@ $("#search-button").click(function (e) {
 });
 
 
-// Grab local storage
-function getHistory() {
+// Display History
+function displayHistory() {
+    // Check for local storage, if empty, return empty array, if not, build list items and append 
     if (localStorage.getItem("history") === null) {
         array = [];
         return array;
     } else {
         // read local storage array
         array = JSON.parse(localStorage.getItem("history"));
-        console.log(array);
-        return array;
-    }
-}
 
-// Display History
-function displayHistory(array) {
-    for (let i = 0; i < array.length; i++) {
-        var btn = $("<button>").text(array[i]).attr("class", "btn history-button");
-        var li = $("<li>").html(btn);
-        $("#history-list").append(li);
-        console.log(array[i]);
+        for (let i = 0; i < array.length; i++) {
+            var btn = $("<button>").text(array[i]).attr("class", "btn history-button");
+            var li = $("<li>").html(btn);
+            $("#history-list").append(li);
+            console.log(array[i]);
+        }
+
+        return array;
+
     }
 }
 
@@ -79,9 +75,10 @@ function getCurrentWeather(city) {
     }).then(function (response) {
         // Log the object for navigating
         // console.log(response);
-
+        console.log("GETCCURRENT WEATHER");
+        console.log(aHistory);
         // Save the city to local storage
-        aHistory = setHistory(aHistory, city);
+        setHistory(aHistory, city);
 
         // Get date value from openweather, convert to JS date format
         var currentDate = (response.dt * 1000);
