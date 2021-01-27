@@ -6,7 +6,7 @@
 var apiKey = "&appid=653447e5538dcc45b8534eb1e5c601c3";
 
 // Display the history on page load
-var aHistory = displayHistory();
+displayHistory();
 
 
 // On Search Click...
@@ -14,60 +14,89 @@ $("#search-button").click(function (e) {
     e.preventDefault();
     var city = $("#search-value").val();
 
+    // Clear search box
+    $("#search-value").val("");
+
     // Call the current weather function to call the API and build the HTML
     getCurrentWeather(city);
-
-    // Clear contents of searchbox
-    $("#search-value").val();
-
-    // Clear contents of today div
-    $("#today").empty();
 
 });
 
 
 // Display History
 function displayHistory() {
-    // Check for local storage, if empty, return empty array, if not, build list items and append 
-    if (localStorage.getItem("history") === null) {
-        array = [];
-        return array;
-    } else {
-        // read local storage array
-        array = JSON.parse(localStorage.getItem("history"));
-
+    var array = getStorage();
+    $("#history-list").empty();
+    console.log("displayHistory() CALL");
+    console.log(array);
+    if (array) {
         for (let i = 0; i < array.length; i++) {
             var btn = $("<button>").text(array[i]).attr("class", "btn history-button");
             var li = $("<li>").html(btn);
             $("#history-list").append(li);
-            console.log(array[i]);
         }
+        addHistoryListener();
+    }
 
+}
+
+// returns an Array of storage contents
+function getStorage() {
+    var array = [];
+    console.log("GETSTORAGE CALL");
+    console.log(array);
+    // Check for local storage, if empty, return empty array, if not, build list items and append 
+    if (localStorage.getItem("history") === null) {
         return array;
-
+    } else {
+        // read local storage array
+        array = JSON.parse(localStorage.getItem("history"));
+        return array;
     }
 }
 
-
 // Write to local storage, as long as it doesnt exist already
-function setHistory(array, city) {
+function setHistory(city) {
+    var array = getStorage();
+    console.log(array);
+
     var pCity = city.charAt(0).toUpperCase() + city.slice(1).toLowerCase();
     if (array.indexOf(pCity) === -1) {
         array.push(pCity);
-
         // Save to local storage
         localStorage.setItem("history", JSON.stringify(array));
-        // console.log(aray);
-        return array
     }
 
 }
+
+function addHistoryListener() {
+    // History Button click
+    $(".history-button").click(function () {
+        // Clear search box
+        $("#search-value").val("");
+        
+        // Run the weather functions of this city 
+        getCurrentWeather($(this).text());
+    })
+}
+
 
 // Create the Current Weather elements
 function getCurrentWeather(city) {
     var cityName = city
     var units = "&units=imperial"
     var queryURL = "https://api.openweathermap.org/data/2.5/weather?q=" + cityName + units + apiKey
+
+    // Set the History
+    setHistory(cityName);
+    // Display History
+    displayHistory();
+
+    // Clear contents of searchbox
+    $("#search-value").val();
+
+    // Clear contents of today div
+    $("#today").empty();
 
     $.ajax({
         url: queryURL,
@@ -76,9 +105,7 @@ function getCurrentWeather(city) {
         // Log the object for navigating
         // console.log(response);
         console.log("GETCCURRENT WEATHER");
-        console.log(aHistory);
-        // Save the city to local storage
-        setHistory(aHistory, city);
+
 
         // Get date value from openweather, convert to JS date format
         var currentDate = (response.dt * 1000);
@@ -114,6 +141,9 @@ function getCurrentWeather(city) {
         getUVIndex(lon, lat);
 
         // Get 5-day Forecast Function
+
+
+
     });
 
 
