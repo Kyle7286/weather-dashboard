@@ -4,7 +4,13 @@
 
 // Global Declarations
 var apiKey = "&appid=653447e5538dcc45b8534eb1e5c601c3";
-var aHistory = [];
+
+// Grab the history on page load
+var aHistory = getHistory();
+
+// Display the history on page load
+displayHistory(aHistory);
+
 
 // On Search Click...
 $("#search-button").click(function (e) {
@@ -23,22 +29,42 @@ $("#search-button").click(function (e) {
 });
 
 
+// Grab local storage
 function getHistory() {
-    // read local storage array
-    aHistory = localStorage.getItem("history")
+    if (localStorage.getItem("history") === null) {
+        array = [];
+        return array;
+    } else {
+        // read local storage array
+        array = JSON.parse(localStorage.getItem("history"));
+        console.log(array);
+        return array;
+    }
 }
 
-function writeHistory(array, city) {
+// Display History
+function displayHistory(array) {
+    for (let i = 0; i < array.length; i++) {
+        var btn = $("<button>").text(array[i]).attr("class", "btn history-button");
+        var li = $("<li>").html(btn);
+        $("#history-list").append(li);
+        console.log(array[i]);
+    }
+}
+
+
+// Write to local storage, as long as it doesnt exist already
+function setHistory(array, city) {
     var pCity = city.charAt(0).toUpperCase() + city.slice(1).toLowerCase();
     if (array.indexOf(pCity) === -1) {
         array.push(pCity);
 
         // Save to local storage
-        localStorage.setItem("history", JSON.stringify(array))
+        localStorage.setItem("history", JSON.stringify(array));
+        // console.log(aray);
+        return array
     }
 
-
-    console.log(array);
 }
 
 // Create the Current Weather elements
@@ -55,7 +81,7 @@ function getCurrentWeather(city) {
         // console.log(response);
 
         // Save the city to local storage
-        writeHistory(aHistory, city);
+        aHistory = setHistory(aHistory, city);
 
         // Get date value from openweather, convert to JS date format
         var currentDate = (response.dt * 1000);
