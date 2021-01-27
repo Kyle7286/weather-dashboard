@@ -25,13 +25,19 @@ $("#search-button").click(function (e) {
 
 function getHistory() {
     // read local storage array
+    aHistory = localStorage.getItem("history")
 }
 
 function writeHistory(array, city) {
     var pCity = city.charAt(0).toUpperCase() + city.slice(1).toLowerCase();
     if (array.indexOf(pCity) === -1) {
         array.push(pCity);
+
+        // Save to local storage
+        localStorage.setItem("history", JSON.stringify(array))
     }
+
+
     console.log(array);
 }
 
