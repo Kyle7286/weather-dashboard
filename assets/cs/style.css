@@ -1,5 +1,5 @@
 /* Add some magic when mousing over the history */
 .history-button:hover {
-    border: solid 1px black;
     font-weight: bold;
+    background-color: #87B2D1;
 }

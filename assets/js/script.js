@@ -42,8 +42,6 @@ function displayHistory() {
                 url: queryURL,
                 method: "GET"
             }).then(function (response) {
-                // Grab City Name
-                var cityName = response.name;
 
                 // Grab and build ICON URL
                 var currentIcon = response.weather[0].icon;
