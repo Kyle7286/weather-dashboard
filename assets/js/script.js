@@ -165,7 +165,7 @@ function getCurrentWeather(city) {
 function getForecast(city) {
     // Example URL: api.openweathermap.org/data/2.5/forecast?q={city name}&appid={API key}
     var units = "&units=imperial"
-    var queryURL = "http://api.openweathermap.org/data/2.5/forecast?q=" + city + units + apiKey;
+    var queryURL = "https://api.openweathermap.org/data/2.5/forecast?q=" + city + units + apiKey;
 
     $.ajax({
         url: queryURL,
@@ -192,7 +192,7 @@ function getForecast(city) {
             var d = new Date(currentDate)
             var dateString = (d.getMonth() + 1) + "/" + d.getDate() + "/" + d.getFullYear();
 
-            var currentIconURL = "http://openweathermap.org/img/w/" + currentObject.weather[0].icon + ".png";
+            var currentIconURL = "https://openweathermap.org/img/w/" + currentObject.weather[0].icon + ".png";
             var currentTemp = currentObject.main.temp;
             var currentHumidity = currentObject.main.humidity;
 
@@ -221,7 +221,7 @@ function getForecast(city) {
 
 // Create the UV Index Element and append to today card
 function getUVIndex(lon, lat) {
-    // Example URL: http://api.openweathermap.org/data/2.5/uvi?lat={lat}&lon={lon}&appid={API key}
+    // Example URL: https://api.openweathermap.org/data/2.5/uvi?lat={lat}&lon={lon}&appid={API key}
     var queryURL = "https://api.openweathermap.org/data/2.5/uvi?lat=" + lat + "&lon=" + lon + apiKey;
 
     $.ajax({
