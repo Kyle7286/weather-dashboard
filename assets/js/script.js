@@ -12,13 +12,16 @@ displayHistory();
 // On Search Click...
 $("#search-button").click(function (e) {
     e.preventDefault();
-    var city = $("#search-value").val();
+    // If there's a value, then run the function, else do nothing
+    if ($("#search-value").val() !== "") {
+        var city = $("#search-value").val();
 
-    // Clear search box
-    $("#search-value").val("");
+        // Clear search box
+        $("#search-value").val("");
 
-    // Call the current weather function to call the API and build the HTML
-    getCurrentWeather(city);
+        // Call the current weather function to call the API and build the HTML
+        getCurrentWeather(city);
+    }
 
 });
 
@@ -27,8 +30,7 @@ $("#search-button").click(function (e) {
 function displayHistory() {
     var array = getStorage();
     $("#history-list").empty();
-    console.log("displayHistory() CALL");
-    console.log(array);
+
     if (array) {
         for (let i = 0; i < array.length; i++) {
             var btn = $("<button>").text(array[i]).attr("class", "btn history-button");
@@ -43,8 +45,7 @@ function displayHistory() {
 // returns an Array of storage contents
 function getStorage() {
     var array = [];
-    console.log("GETSTORAGE CALL");
-    console.log(array);
+
     // Check for local storage, if empty, return empty array, if not, build list items and append 
     if (localStorage.getItem("history") === null) {
         return array;
@@ -58,7 +59,6 @@ function getStorage() {
 // Write to local storage, as long as it doesnt exist already
 function setHistory(city) {
     var array = getStorage();
-    console.log(array);
 
     var pCity = city.charAt(0).toUpperCase() + city.slice(1).toLowerCase();
     if (array.indexOf(pCity) === -1) {
@@ -74,11 +74,25 @@ function addHistoryListener() {
     $(".history-button").click(function () {
         // Clear search box
         $("#search-value").val("");
-        
+
         // Run the weather functions of this city 
         getCurrentWeather($(this).text());
     })
 }
+
+// Clear History
+
+
+$("#clear-button").click(function (e) {
+    e.preventDefault();
+    // Clear history
+    $("#history-list").empty();
+
+    // Clear storage
+    localStorage.clear();
+
+
+})
 
 
 // Create the Current Weather elements
@@ -87,10 +101,7 @@ function getCurrentWeather(city) {
     var units = "&units=imperial"
     var queryURL = "https://api.openweathermap.org/data/2.5/weather?q=" + cityName + units + apiKey
 
-    // Set the History
-    setHistory(cityName);
-    // Display History
-    displayHistory();
+
 
     // Clear contents of searchbox
     $("#search-value").val();
@@ -100,16 +111,19 @@ function getCurrentWeather(city) {
 
     $.ajax({
         url: queryURL,
-        method: "GET"
+        method: "GET",
+        error: function (err) {
+            $("#forecast-div").empty();
+        }
     }).then(function (response) {
-        // Log the object for navigating
-        // console.log(response);
-        console.log("GETCCURRENT WEATHER");
-
-
+        // Set the History
+        setHistory(cityName);
+        // Display History
+        displayHistory();
+        
         // Get date value from openweather, convert to JS date format
         var currentDate = (response.dt * 1000);
-        var d = new Date(currentDate)
+        var d = new Date(currentDate);
         var dateString = (d.getMonth() + 1) + "/" + d.getDate() + "/" + d.getFullYear();
 
         // Grab the data we need to display
@@ -126,9 +140,9 @@ function getCurrentWeather(city) {
 
         // Create card elements
         $("<h3>").text(name + " (" + dateString + ")").appendTo(divCardBody).append($("<img>").attr({ id: "wicon", alt: "Weather Icon" }).attr("src", iconURL));
-        $("<p>").text("Temperature: " + currentTemp + " °F").appendTo(divCardBody);
+        $("<p>").text("Temperature: " + Math.round(currentTemp) + " °F").appendTo(divCardBody);
         $("<p>").text("Humidity: " + currentHumidity + "%").appendTo(divCardBody);
-        $("<p>").text("Wind Speed: " + currentWindSpeed + "MPH").appendTo(divCardBody);
+        $("<p>").text("Wind Speed: " + Math.round(currentWindSpeed) + " MPH").appendTo(divCardBody);
 
         // Append final card to page
         $("#today").append(divCard);
@@ -141,11 +155,69 @@ function getCurrentWeather(city) {
         getUVIndex(lon, lat);
 
         // Get 5-day Forecast Function
-
+        getForecast(cityName);
 
 
     });
 
+
+}
+
+// get foreCast
+function getForecast(city) {
+    // Example URL: api.openweathermap.org/data/2.5/forecast?q={city name}&appid={API key}
+    var units = "&units=imperial"
+    var queryURL = "http://api.openweathermap.org/data/2.5/forecast?q=" + city + units + apiKey;
+
+    $.ajax({
+        url: queryURL,
+        method: "GET"
+    }).then(function (response) {
+
+        // Grab data
+        var aForecastList = response.list;
+
+        // Empty Div
+        $("#forecast-div").empty();
+
+        // Headline
+        $("<h4>").text("5-Day Forecast").appendTo($("#forecast-div"));
+
+        // Loop thru each forecast list up until 5
+        for (let i = 2; i < 40; i += 8) {
+
+            // Grab Data
+            var currentObject = aForecastList[i];
+
+            // Get the date
+            var currentDate = (currentObject.dt * 1000);
+            var d = new Date(currentDate)
+            var dateString = (d.getMonth() + 1) + "/" + d.getDate() + "/" + d.getFullYear();
+
+            var currentIconURL = "http://openweathermap.org/img/w/" + currentObject.weather[0].icon + ".png";
+            var currentTemp = currentObject.main.temp;
+            var currentHumidity = currentObject.main.humidity;
+
+
+
+            // Create Forecast button
+            var btnForecast = $("<button>").attr("class", "btn-primary d-inline text-start rounded m-2").attr("disabled", "");
+
+            // Create Forecast Elements
+            var h6 = $("<h6>").text(dateString);
+            var img = $("<img>").attr("src", currentIconURL);
+            var pTemp = $("<p>").text("Temperature: " + Math.round(currentTemp) + " °F");
+            var pHum = $("<p>").text("Humidity: " + currentHumidity + "%");
+
+            // Append elements to button
+            $(btnForecast).append(h6, img, pTemp, pHum);
+
+            // Append button to forecast div
+            $("#forecast-div").append(btnForecast);
+
+        }
+
+    });
 
 }
 

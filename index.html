@@ -44,20 +44,22 @@
 
                 <form class="form-inline form-group d-flex">
                     <input class="form-control" type="text" id="search-value" />
-                    <button type="submit" class="btn btn-primary" id="search-button"> <i class="fa fa-search"></i>
-                    </button>
+                    <button type="submit" class="btn btn-primary" id="search-button"> <i
+                            class="fa fa-search"></i></button>
+                    <button type="btn" class="btn btn-outline-primary ms-2" id="clear-button"> <i
+                            class="far fa-trash-alt"></i></button>
+
                 </form>
 
-                <ul class="list-group history" id="history-list">
-                    <!-- <li><button class="btn history-button">Atlanta</button></li>
-                    <li><button class="btn">Mepmphis</button></li>
-                    <li><button class="btn">Turkey</button></li> -->
-                </ul>
+                <ul class="list-group history" id="history-list"></ul>
             </aside>
 
             <div class="col-lg-9">
                 <div id="today" class="mt-3"></div>
-                <div id="forecast" class="mt-3"></div>
+                <div id="forecast-div" class="mt-3">
+                    <!-- <h4>5-Day Forecast</h4> -->
+                    <!-- <div id="forecast-div"></div> -->
+                </div>
             </div>
         </div>
     </div>

@@ -15,7 +15,11 @@
     * create a listitem for each index
     * append to list table
 
-## Dispay History
+## WorkFlow
 * On Page load
+    1. displayHistory()
 * On Search
+    *setHistory()
+    * displayHistory()
+
  
