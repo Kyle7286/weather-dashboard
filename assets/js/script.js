@@ -27,7 +27,7 @@ function displayHistory() {
 
     if (array) {
         $.each(array, function (i, item) {
-            console.log("BEFORE: " + item);
+
             var units = "&units=imperial"
             var queryURL = "https://api.openweathermap.org/data/2.5/weather?q=" + item + units + apiKey
 
@@ -44,12 +44,10 @@ function displayHistory() {
             }).then(function (response) {
                 // Grab City Name
                 var cityName = response.name;
-                console.log("IN: " + cityName)
 
                 // Grab and build ICON URL
                 var currentIcon = response.weather[0].icon;
                 var iconURL = "https://openweathermap.org/img/w/" + currentIcon + ".png";
-                console.log(iconURL);
 
                 // Attach the image to the list item
                 var img = $("<img>").attr("src", iconURL);
@@ -63,7 +61,6 @@ function displayHistory() {
 }
 // Add button lister for history
 function addHistoryListener() {
-    console.log("addListerner() Called!");
     // History Button click
     $(".history-button").click(function () {
         // Clear search box
@@ -194,10 +191,11 @@ function getForecast(city) {
         $("<h4>").text("5-Day Forecast").appendTo($("#forecast-div"));
 
         // Loop thru each forecast list up until 5
-        for (let i = 2; i < 40; i += 8) {
+        for (let i = 6; i < 40; i += 8) {
 
             // Grab Data
             var currentObject = aForecastList[i];
+            console.log(currentObject);
 
             // Get the date
             var currentDate = (currentObject.dt * 1000);
