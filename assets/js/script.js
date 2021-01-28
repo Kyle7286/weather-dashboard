@@ -59,9 +59,7 @@ function displayHistory() {
 
         // Add the click listeners for the buttons
         addHistoryListener();
-    };
-
-
+    }
 }
 // Add button lister for history
 function addHistoryListener() {
@@ -90,8 +88,6 @@ function getStorage() {
     }
 }
 
-
-
 // Write to local storage, as long as it doesnt exist already
 function setHistory(city) {
 
@@ -103,10 +99,6 @@ function setHistory(city) {
         localStorage.setItem("history", JSON.stringify(array));
     }
 }
-
-
-
-
 
 // Clear History
 $("#clear-button").click(function (e) {
