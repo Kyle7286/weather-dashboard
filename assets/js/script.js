@@ -1,13 +1,8 @@
-// Example API cals: api.openweathermap.org/data/2.5/weather?q=London&appid={API key}
-// Example: api.openweathermap.org/data/2.5/weather?q={city name}&appid={API key}
-
-
 // Global Declarations
 var apiKey = "&appid=653447e5538dcc45b8534eb1e5c601c3";
 
 // Display the history on page load
 displayHistory();
-
 
 // On Search Click...
 $("#search-button").click(function (e) {
@@ -22,7 +17,6 @@ $("#search-button").click(function (e) {
         // Call the current weather function to call the API and build the HTML
         getCurrentWeather(city);
     }
-
 });
 
 
@@ -39,7 +33,6 @@ function displayHistory() {
         }
         addHistoryListener();
     }
-
 }
 
 // returns an Array of storage contents
@@ -66,7 +59,6 @@ function setHistory(city) {
         // Save to local storage
         localStorage.setItem("history", JSON.stringify(array));
     }
-
 }
 
 function addHistoryListener() {
@@ -81,8 +73,6 @@ function addHistoryListener() {
 }
 
 // Clear History
-
-
 $("#clear-button").click(function (e) {
     e.preventDefault();
     // Clear history
@@ -92,14 +82,11 @@ $("#clear-button").click(function (e) {
     localStorage.clear();
 })
 
-
 // Create the Current Weather elements
 function getCurrentWeather(city) {
     var cityName = city
     var units = "&units=imperial"
     var queryURL = "https://api.openweathermap.org/data/2.5/weather?q=" + cityName + units + apiKey
-
-
 
     // Clear contents of searchbox
     $("#search-value").val();
@@ -154,11 +141,7 @@ function getCurrentWeather(city) {
 
         // Get 5-day Forecast Function
         getForecast(cityName);
-
-
     });
-
-
 }
 
 // get foreCast
@@ -191,12 +174,9 @@ function getForecast(city) {
             var currentDate = (currentObject.dt * 1000);
             var d = new Date(currentDate)
             var dateString = (d.getMonth() + 1) + "/" + d.getDate() + "/" + d.getFullYear();
-
             var currentIconURL = "https://openweathermap.org/img/w/" + currentObject.weather[0].icon + ".png";
             var currentTemp = currentObject.main.temp;
             var currentHumidity = currentObject.main.humidity;
-
-
 
             // Create Forecast button
             var btnForecast = $("<button>").attr("class", "btn-primary d-inline text-start rounded m-2").attr("disabled", "");
@@ -214,9 +194,7 @@ function getForecast(city) {
             $("#forecast-div").append(btnForecast);
 
         }
-
     });
-
 }
 
 // Create the UV Index Element and append to today card
