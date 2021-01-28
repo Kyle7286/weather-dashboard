@@ -19,7 +19,6 @@ $("#search-button").click(function (e) {
     }
 });
 
-
 // Display History
 function displayHistory() {
     var array = getStorage();
@@ -61,6 +60,7 @@ function setHistory(city) {
     }
 }
 
+// Add button lister for history
 function addHistoryListener() {
     // History Button click
     $(".history-button").click(function () {
@@ -192,7 +192,6 @@ function getForecast(city) {
 
             // Append button to forecast div
             $("#forecast-div").append(btnForecast);
-
         }
     });
 }
