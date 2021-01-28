@@ -1,4 +1,4 @@
-# Template
+# Weather Dashboard
 
 ## General 📖
 ---
@@ -10,7 +10,7 @@
 
 ## About/Purpose ❔
 ---
-
+The purpose of this application is to retrieve pertinient weather information for a city in which you search for and simply display it in a dashboard.
 
 
 ## Takeaways 🥡

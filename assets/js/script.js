@@ -50,11 +50,11 @@ function getStorage() {
 
 // Write to local storage, as long as it doesnt exist already
 function setHistory(city) {
+
     var array = getStorage();
 
-    var pCity = city.charAt(0).toUpperCase() + city.slice(1).toLowerCase();
-    if (array.indexOf(pCity) === -1) {
-        array.push(pCity);
+    if (array.indexOf(city) === -1) {
+        array.push(city);
         // Save to local storage
         localStorage.setItem("history", JSON.stringify(array));
     }
@@ -101,8 +101,9 @@ function getCurrentWeather(city) {
             $("#forecast-div").empty();
         }
     }).then(function (response) {
+
         // Set the History
-        setHistory(cityName);
+        setHistory(response.name);
         // Display History
         displayHistory();
 
