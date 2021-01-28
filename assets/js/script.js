@@ -19,19 +19,61 @@ $("#search-button").click(function (e) {
     }
 });
 
+
 // Display History
 function displayHistory() {
     var array = getStorage();
     $("#history-list").empty();
 
     if (array) {
-        for (let i = 0; i < array.length; i++) {
-            var btn = $("<button>").text(array[i]).attr("class", "btn history-button");
+        $.each(array, function (i, item) {
+            console.log("BEFORE: " + item);
+            var units = "&units=imperial"
+            var queryURL = "https://api.openweathermap.org/data/2.5/weather?q=" + item + units + apiKey
+
+            // Create button
+            var btn = $("<button>").text(item).attr("class", "btn history-button");
             var li = $("<li>").html(btn);
             $("#history-list").append(li);
-        }
+
+
+
+            $.ajax({
+                url: queryURL,
+                method: "GET"
+            }).then(function (response) {
+                // Grab City Name
+                var cityName = response.name;
+                console.log("IN: " + cityName)
+
+                // Grab and build ICON URL
+                var currentIcon = response.weather[0].icon;
+                var iconURL = "https://openweathermap.org/img/w/" + currentIcon + ".png";
+                console.log(iconURL);
+
+                // Attach the image to the list item
+                var img = $("<img>").attr("src", iconURL);
+                img.appendTo($(li));
+            });
+        });
+
+        // Add the click listeners for the buttons
         addHistoryListener();
-    }
+    };
+
+
+}
+// Add button lister for history
+function addHistoryListener() {
+    console.log("addListerner() Called!");
+    // History Button click
+    $(".history-button").click(function () {
+        // Clear search box
+        $("#search-value").val("");
+
+        // Run the weather functions of this city 
+        getCurrentWeather($(this).text());
+    });
 }
 
 // returns an Array of storage contents
@@ -48,6 +90,8 @@ function getStorage() {
     }
 }
 
+
+
 // Write to local storage, as long as it doesnt exist already
 function setHistory(city) {
 
@@ -60,17 +104,9 @@ function setHistory(city) {
     }
 }
 
-// Add button lister for history
-function addHistoryListener() {
-    // History Button click
-    $(".history-button").click(function () {
-        // Clear search box
-        $("#search-value").val("");
 
-        // Run the weather functions of this city 
-        getCurrentWeather($(this).text());
-    })
-}
+
+
 
 // Clear History
 $("#clear-button").click(function (e) {
@@ -86,7 +122,7 @@ $("#clear-button").click(function (e) {
 function getCurrentWeather(city) {
     var cityName = city
     var units = "&units=imperial"
-    var queryURL = "https://api.openweathermap.org/data/2.5/weather?q=" + cityName + units + apiKey
+    var queryURL = "https://api.openweathermap.org/data/2.5/weather?q=" + cityName + units + apiKey;
 
     // Clear contents of searchbox
     $("#search-value").val();
