@@ -22,7 +22,7 @@
 
 ## Screenshot/Gif 📊
 ---
-![Screenshot](./Assets/md/weatherDashboard.gif)
+![Gif](./Assets/md/weatherDashboard.gif)
 
 ## Thank you 👍 
 ---
