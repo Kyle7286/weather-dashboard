@@ -90,8 +90,6 @@ $("#clear-button").click(function (e) {
 
     // Clear storage
     localStorage.clear();
-
-
 })
 
 
@@ -120,7 +118,7 @@ function getCurrentWeather(city) {
         setHistory(cityName);
         // Display History
         displayHistory();
-        
+
         // Get date value from openweather, convert to JS date format
         var currentDate = (response.dt * 1000);
         var d = new Date(currentDate);
