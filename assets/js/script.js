@@ -134,7 +134,7 @@ function getCurrentWeather(city) {
         // Create Card
         var divCard = $("<div>").attr({ class: "card", id: "today-card" });
         var divCardBody = $("<div>").attr({ class: "card-body", id: "today-card-body" }).appendTo(divCard);
-        var iconURL = "http://openweathermap.org/img/w/" + currentIcon + ".png"
+        var iconURL = "https://openweathermap.org/img/w/" + currentIcon + ".png"
 
         // Create card elements
         $("<h3>").text(name + " (" + dateString + ")").appendTo(divCardBody).append($("<img>").attr({ id: "wicon", alt: "Weather Icon" }).attr("src", iconURL));
